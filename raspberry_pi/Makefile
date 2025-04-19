@@ -17,23 +17,23 @@ all: $(EXECS)
 
 # Compile PixelDust library into current directory
 Adafruit_PixelDust.o: $(PIXELDUST_PATH)/Adafruit_PixelDust.cpp $(PIXELDUST_PATH)/Adafruit_PixelDust.h
-	$(CXX) $(CXXFLAGS) -c $<
+    $(CXX) $(CXXFLAGS) -c $<
 
 # Minimalist LIS3DH code
 lis3dh.o: lis3dh.cpp lis3dh.h
-	$(CXX) $(CXXFLAGS) -c $<
+    $(CXX) $(CXXFLAGS) -c $<
 
 demo1-snow: demo1-snow.cpp $(LIBS)
-	$(CXX) $(CXXFLAGS) $< $(LDFLAGS) $(LIBS) -o $@
-	strip $@
+    $(CXX) $(CXXFLAGS) $< $(LDFLAGS) $(LIBS) -o $@
+    strip $@
 
 demo2-hourglass: demo2-hourglass.cpp $(LIBS)
-	$(CXX) $(CXXFLAGS) $< $(LDFLAGS) $(LIBS) -o $@
-	strip $@
+    $(CXX) $(CXXFLAGS) $< $(LDFLAGS) $(LIBS) -o $@
+    strip $@
 
 demo3-logo: demo3-logo.cpp logo.h $(LIBS)
-	$(CXX) $(CXXFLAGS) $< $(LDFLAGS) $(LIBS) -o $@
-	strip $@
+    $(CXX) $(CXXFLAGS) $< $(LDFLAGS) $(LIBS) -o $@
+    strip $@
 
 clean:
-	rm -f $(EXECS) *.o
+    rm -f $(EXECS) *.o

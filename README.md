@@ -43,15 +43,15 @@ The demo defines a 40-bit by 40-bit array (which translate to a 40-byte by 5-byt
     
     for(y=0; y<LOGO_HEIGHT; y++)
     {
-    	for(x=0; x<LOGO_WIDTH; x++)
-    	{
-    		uint8_t c = logo_mask[y][x / 8];
+        for(x=0; x<LOGO_WIDTH; x++)
+        {
+            uint8_t c = logo_mask[y][x / 8];
     
-    		if(c & (0x80 >> (x & 7)))
-    		{
-    			sand->setPixel(x1+x, y1+y);
-    		}
-    	}
+            if(c & (0x80 >> (x & 7)))
+            {
+                sand->setPixel(x1+x, y1+y);
+            }
+        }
     }
 
 [View the output](https://raw.githubusercontent.com/porrey/ledmatrixide/master/Files/loop-output.txt) of this loop as it is iterated to help better understand how this structure is used to mark the obstacles.
@@ -81,8 +81,8 @@ Once the instance is created call `begin()`. An example of this method is shown 
 
     if(!sand->begin()) 
     {
-    	puts("PixelDust init failed");
-    	return 2;
+        puts("PixelDust init failed");
+        return 2;
     }
 
 After the number of grains has been defined, their initial position must be defined. This can be done using one of two methods.
@@ -95,11 +95,11 @@ The second method is `setPosition()` and is used to specify the starting positio
 
     sand->setPosition(i, x, y);
 
-**i**:	*Grain index (0 to grains-1).*
+**i**:    *Grain index (0 to grains-1).*
 
-**x**:	*Horizontal (x) coordinate (0 to width - 1).*
+**x**:    *Horizontal (x) coordinate (0 to width - 1).*
 
-**y**:	*Vertical (y) coordinate (0 to height - 1).*
+**y**:    *Vertical (y) coordinate (0 to height - 1).*
 
 The method returns True on success (grain placed), otherwise false (position already occupied).
 
@@ -149,7 +149,7 @@ Continuing with our 2 x 2 image example, suppose we have translated it to the st
     
     const uint32_t image_color[IMAGE_HEIGHT][IMAGE_WIDTH] =
     {
-    	0xFFD28825, 0xFFBB9520, 0xFFCB9A22, 0xFFCE9722
+        0xFFD28825, 0xFFBB9520, 0xFFCB9A22, 0xFFCE9722
     }
 
 The code below could be used to draw this image to LED matrix.
@@ -160,19 +160,19 @@ The code below could be used to draw this image to LED matrix.
     
     for(y = 0; y < IMAGE_HEIGHT; y++) 
     {
-    	for(x = 0; x < IMAGE_WIDTH; x++) 
-    	{
-    		uint color = image_color[y][x];
-    		
-    		// Break the color into its components
-    		uint8_t a = (color >> 24);  // Not used here
-    		uint8_t r = (color >> 16);
-    		uint8_t g = (color >> 8);
-    		uint8_t b = (color >> 0);
+        for(x = 0; x < IMAGE_WIDTH; x++) 
+        {
+            uint color = image_color[y][x];
+            
+            // Break the color into its components
+            uint8_t a = (color >> 24);  // Not used here
+            uint8_t r = (color >> 16);
+            uint8_t g = (color >> 8);
+            uint8_t b = (color >> 0);
 
-    		// Draw the image pixel.
-    		led_canvas_set_pixel(canvas, x1 + x, y1 + y, r, g, b);
-    	}
+            // Draw the image pixel.
+            led_canvas_set_pixel(canvas, x1 + x, y1 + y, r, g, b);
+        }
     }
 
 ### 2. Mapping the Obstacles ###
@@ -180,7 +180,7 @@ The obstacles should correspond to the pixels in the image meaning anywhere you 
 
     const uint8_t image_mask[IMAGE_HEIGHT][IMAGE_WIDTH] =
     {
-    	1, 1, 1, 1
+        1, 1, 1, 1
     }
 
 The code to define the obstacles using this structure would be as shown below.
@@ -190,15 +190,15 @@ The code to define the obstacles using this structure would be as shown below.
     
     for(y = 0; y < IMAGE_HEIGHT; y++) 
     {
-    	for(x = 0; x < IMAGE_WIDTH; x++) 
-    	{
-    		uint8_t maskBit = image_mask[y][x];
-    		
-    		if (maskBit == 1)
-    		{
-    			sand->setPixel(x1 + x, y1 + y);
-    		}
-    	}
+        for(x = 0; x < IMAGE_WIDTH; x++) 
+        {
+            uint8_t maskBit = image_mask[y][x];
+            
+            if (maskBit == 1)
+            {
+                sand->setPixel(x1 + x, y1 + y);
+            }
+        }
     }
 
 ### 3. Specify the Obstacle Position and Color ###
@@ -210,38 +210,38 @@ Next, we need a structure that defines the position and color for each grain. Th
 
     const uint32_t grains[NUM_GRAINS][3] =
     {
-    	 0,  0, 0xFF3A8EF6,
-    	 1,  0, 0xFF3A8EF6,
-    	 2,  0, 0xFF3A8EF6,
-    	 3,  0, 0xFF3A8EF6
+         0,  0, 0xFF3A8EF6,
+         1,  0, 0xFF3A8EF6,
+         2,  0, 0xFF3A8EF6,
+         3,  0, 0xFF3A8EF6
     }
 
 The code that uses this structure to initialize the position of the grains is shown below.
 
     for(i = 0; i < NUM_GRAINS; i++) 
     {
-    	uint8_t x = grains[i][0];
-    	uint8_t y = grains[i][1];
-    	sand->setPosition(i, x, y);
+        uint8_t x = grains[i][0];
+        uint8_t y = grains[i][1];
+        sand->setPosition(i, x, y);
     }
 
 The code that uses this structure to draw the grains is shown below. Note this code should be contained within the `while(running)` loop.
 
     for(i = 0; i < NUM_GRAINS; i++) 
     {
-    	// Get the position of the grain.
-    	sand->getPosition(i, &x, &y);
-    	
-    	// Get the color of the grain.
-    	uint color = grains[i][2];
+        // Get the position of the grain.
+        sand->getPosition(i, &x, &y);
+        
+        // Get the color of the grain.
+        uint color = grains[i][2];
     
-    	// Break the color into its components
-    	uint8_t r = (color >> 16);
-    	uint8_t g = (color >> 8);
-    	uint8_t b = (color >> 0);
+        // Break the color into its components
+        uint8_t r = (color >> 16);
+        uint8_t g = (color >> 8);
+        uint8_t b = (color >> 0);
     
-    	// Draw the sand pixel.
-    	led_canvas_set_pixel(canvas, x, y, r, b, g);
+        // Draw the sand pixel.
+        led_canvas_set_pixel(canvas, x, y, r, b, g);
     }
 
 The sort parameter must be set to false in the library constructor when using the code above.
