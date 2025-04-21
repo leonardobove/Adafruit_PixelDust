@@ -47,6 +47,18 @@ typedef uint8_t grain_count_t; ///< Number of grains
 typedef uint16_t dimension_t;   ///< Pixel dimensions
 typedef int32_t position_t;     ///< 'Sand space' coords (256X pixel space)
 typedef uint16_t grain_count_t; ///< Number of grains
+typedef enum {
+    BLACK  = 0b000,
+    RED    = 0b100,
+    GREEN  = 0b010,
+    BLUE   = 0b001,
+    YELLOW = 0b110,
+    CYAN   = 0b011,
+    PURPLE = 0b101,
+    WHITE  = 0b111,
+
+    NUM_COLORS
+} grain_color_t;                ///< 3-bit RGB grain colors
 #endif
 // Velocity type is same on any architecture -- must allow up to +/- 256
 typedef int16_t velocity_t; ///< Velocity type
@@ -57,10 +69,11 @@ typedef int16_t velocity_t; ///< Velocity type
     one per grain.  8 bytes each on AVR, 12 bytes elsewhere.
 */
 typedef struct {
-  position_t x;  ///< Horizontal position in 'sand space'
-  position_t y;  ///< Vertical position in 'sand space'
-  velocity_t vx; ///< Horizontal velocity (-255 to +255) in 'sand space'
-  velocity_t vy; ///< Vertical velocity (-255 to +255) in 'sand space'
+  position_t    x;  ///< Horizontal position in 'sand space'
+  position_t    y;  ///< Vertical position in 'sand space'
+  velocity_t    vx; ///< Horizontal velocity (-255 to +255) in 'sand space'
+  velocity_t    vy; ///< Vertical velocity (-255 to +255) in 'sand space'
+  grain_color_t c;  ///< 3-bit RGB color of the grain
 } Grain;
 
 /*!
@@ -164,6 +177,21 @@ public:
       @param  y POINTER to store vertical (y) coord (0 to height-1).
   */
   void getPosition(grain_count_t i, dimension_t *x, dimension_t *y) const;
+
+  /*!
+      @brief  Set the color of one sand grain on the pixel grid.
+      @param  i Grain index (0 to grains-1).
+      @param  color Grain color.
+      @return True on success (grain colored), otherwise false
+  */
+ bool setColor(grain_count_t i, grain_color_t color);
+
+ /*!
+     @brief  Get color of one sand grain on the pixel grid.
+     @param  i Grain index (0 to grains-1).
+     @param  color POINTER to store grain color.
+ */
+  void getColor(grain_count_t i, grain_color_t *color) const;
 
   /*!
       @brief Randomize grain coordinates. This assigns random starting

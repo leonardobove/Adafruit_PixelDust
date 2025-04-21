@@ -59,7 +59,7 @@ bool Adafruit_PixelDust::begin(void) {
 }
 
 bool Adafruit_PixelDust::setPosition(grain_count_t i, dimension_t x,
-                                     dimension_t y) {
+                                     dimension_t y) { //TODO: need to check on i index value
   if (getPixel(x, y))
     return false; // Position already occupied
   setPixel(x, y);
@@ -74,12 +74,21 @@ void Adafruit_PixelDust::getPosition(grain_count_t i, dimension_t *x,
   *y = grain[i].y / 256;
 }
 
+bool Adafruit_PixelDust::setColor(grain_count_t i, grain_color_t color) {
+  grain[i].c = color;
+  return true;
+}
+
+void Adafruit_PixelDust::getColor(grain_count_t i, grain_color_t *color) const {
+  *color = grain[i].c;
+}
+
 // Fill grain structures with random positions, making sure no two are
 // in the same location.
 void Adafruit_PixelDust::randomize(void) {
   for (grain_count_t i = 0; i < n_grains; i++) {
-    while (!setPosition(i, random(width), random(height)))
-      ;
+    while (!setPosition(i, random(width), random(height)));
+    setColor(i, (grain_color_t)(random(NUM_COLORS - 1) + 1));
   }
 }
 
