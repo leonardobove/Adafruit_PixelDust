@@ -59,7 +59,7 @@ bool Adafruit_PixelDust::begin(void) {
 }
 
 bool Adafruit_PixelDust::setPosition(grain_count_t i, dimension_t x,
-                                     dimension_t y) { //TODO: need to check on i index value
+                                     dimension_t y) {
   if (getPixel(x, y))
     return false; // Position already occupied
   setPixel(x, y);
